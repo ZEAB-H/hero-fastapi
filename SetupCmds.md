@@ -146,7 +146,8 @@ GRANT CREATE ON SCHEMA public TO abel;
 
 \q -> to quit and return to terminal
  
-
+ psql -h localhost -U abel -d hero_db -> For connecting with the Database
+ 
 
 
 ```
