@@ -121,4 +121,40 @@ deactivate
 
  
 
+ ### Database Related 
+
+
+```commandline
+psql -U postgres
+```
+default password for the starter
+```bash
+password= postgres
+```
+
+
+## Database Command Lines 
+
+```bash 
+\l  --> For listing the databases
+CREATE DATABASE hero_db;    --> For Creating A DATABASE
+CREATE USER abel WITH PASSWORD 'Test1234'; -> For Creating a User with role
+GRANT ALL PRIVILEGES ON DATABASE hero_db TO abel; -> To Grant all Privillages
+\c hero_db; --> To connect to the Database
+GRANT USAGE ON SCHEMA public TO abel; 
+GRANT CREATE ON SCHEMA public TO abel;
+
+\q -> to quit and return to terminal
  
+
+
+
+```
+
+
+## General App Commands
+
+```commandline
+ fastapi dev main.py  # to start the server 
+
+```
