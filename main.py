@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from contextlib import asynccontextmanager
 from database import create_db_end_tables
-from routes import hero
+from routes.hero import router as hero_router  # More explicit import
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -13,9 +13,8 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(lifespan=lifespan)
 
-# @app.get("/")
-# async def root():
-#     return {"message": "Hello World This is a Simple Setup of FastAPI"}
+app.include_router(hero_router)
 
-
-app.include_router(hero.router)
+@app.get("/")
+async def root():
+    return {"message": "Hero API is running"}

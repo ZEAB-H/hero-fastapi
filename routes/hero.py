@@ -1,6 +1,8 @@
-from fastapi import APIRouter, Depends
-from schemas import CreateHero
-from typing_extensions import Annotated  # Changed this line
+from fastapi import APIRouter, Depends, Query, HTTPException
+from schemas import CreateHero, ReadHero
+from typing_extensions import Annotated
+from starlette import status
+from typing import List
 from database import get_session
 from sqlmodel import Session
 import crud
@@ -8,6 +10,18 @@ import crud
 router = APIRouter(prefix="/heros", tags=["hero"])
 SessionDep = Annotated[Session, Depends(get_session)]
 
-@router.post("/", response_model=CreateHero)
+@router.post("/", response_model=ReadHero)
 def create(hero: CreateHero, session: SessionDep):
     return crud.create_hero(session, hero)
+
+@router.get("/", response_model=List[ReadHero])
+def read_all(session: SessionDep, offset: int = 0, limit: Annotated[int, Query(le=100)] = 100):
+    return crud.get_heros(session, offset, limit)
+
+@router.get("/{hero_id}", response_model=List[ReadHero])
+def read(session: SessionDep,hero_id: int):
+    hero= crud.get_heros(session, hero_id)
+    if not hero:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND , detail=" There is no hero with this id!")
+
+    return hero
