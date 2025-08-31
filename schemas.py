@@ -12,3 +12,8 @@ class ReadHero(SQLModel):
     name:str
     age: Optional[int] = None
     secret_name: str
+
+class UpdateHero(SQLModel):
+    name: Optional[str] = None
+    age: Optional[int] = None
+    secret_name: str

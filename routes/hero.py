@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Depends, Query, HTTPException
-from schemas import CreateHero, ReadHero
+from schemas import CreateHero, ReadHero , UpdateHero
 from typing_extensions import Annotated
 from starlette import status
 from typing import List
@@ -18,10 +18,27 @@ def create(hero: CreateHero, session: SessionDep):
 def read_all(session: SessionDep, offset: int = 0, limit: Annotated[int, Query(le=100)] = 100):
     return crud.get_heros(session, offset, limit)
 
-@router.get("/{hero_id}", response_model=List[ReadHero])
+@router.get("/{hero_id}", response_model=ReadHero)
 def read(session: SessionDep,hero_id: int):
     hero= crud.get_heros(session, hero_id)
     if not hero:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND , detail=" There is no hero with this id!")
 
     return hero
+
+@router.put("/edit/{hero_id}", response_model=ReadHero)
+def update(session: SessionDep,hero_id: int, hero_update:UpdateHero):
+    updatedHero= crud.update_hero(session, hero_id, hero_update)
+    if not updatedHero:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND , detail="Can not update")
+
+    return updatedHero
+
+
+@router.delete("/{hero_id}")
+def delete(session: SessionDep,hero_id: int):
+    deleted= crud.delete_hero(session, hero_id)
+    if not deleted:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND , detail="Can not delete")
+
+    return {"ok":True}
